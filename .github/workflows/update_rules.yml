@@ -23,7 +23,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install requirements
-      run: pip install requests
+      run: pip install requests && pip install requests pyyaml
 
     - name: Fetch Data from URL
       id: fetch_data
