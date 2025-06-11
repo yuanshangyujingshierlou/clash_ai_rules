@@ -28,9 +28,11 @@ for line in raw_data.splitlines():
     elif line.startswith("PROCESS-NAME,"):
         process_names.add(line.split(",")[1].strip())
 
+domain_list = sorted(list(domains))
+yaml_data_domains = {"payload": domain_list}
+
 with open("domains.list", "w") as f:
-    for domain in sorted(list(domains)):
-        f.write(domain + "\n")
+    yaml.dump(yaml_data_domains, f, sort_keys=False)
 
 ip_list = sorted(list(ips))
 yaml_data_ips = {"payload": ip_list}
