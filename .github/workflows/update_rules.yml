@@ -1,0 +1,76 @@
+name: Update Clash Rules from URL
+
+on:
+  push: # 可选：当有代码推送到仓库时触发
+  schedule: # 可选：每天定时触发（例如，每天凌晨 3 点 UTC）
+    - cron: "0 3 * * *"
+  workflow_dispatch: # 可选：允许手动触发
+
+jobs:
+  generate_rules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install requirements
+        run: pip install requests
+
+      - name: Fetch Data from URL
+        id: fetch_data
+        run: |
+          DATA_URL="https://raw.githubusercontent.com/szkane/ClashRuleSet/main/Clash/Ruleset/AiDomain.list"
+          RAW_DATA=$(curl -s "$DATA_URL")
+          echo "RAW_DATA<<EOF" >> $GITHUB_OUTPUT
+          echo "$RAW_DATA" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Process Data and Generate Rules
+        env:
+          RAW_DATA: ${{ steps.fetch_data.outputs.RAW_DATA }}
+        run: |
+          import os
+          import re
+
+          raw_data = os.environ.get("RAW_DATA")
+          if not raw_data:
+              print("RAW_DATA environment variable not set.")
+              exit(1)
+
+          domains = set()
+          ips = set()
+
+          for line in raw_data.splitlines():
+              line = line.strip()
+              if not line or line.startswith("#"):
+                  continue
+              if line.startswith("DOMAIN-KEYWORD,"):
+                  domains.add(line.split(",")[1].strip())
+              elif line.startswith("DOMAIN-SUFFIX,"):
+                  domains.add(line.split(",")[1].strip())
+              elif line.startswith("DOMAIN,"):
+                  domains.add(line.split(",")[1].strip())
+              elif line.startswith("IP-CIDR,"):
+                  parts = line.split(",")
+                  if len(parts) > 1:
+                      ips.add(parts[1].strip())
+
+          with open("domains.list", "w") as f:
+              for domain in sorted(list(domains)):
+                  f.write(domain + "\n")
+
+          with open("ips.list", "w") as f:
+              for ip in sorted(list(ips)):
+                  f.write(ip + "\n")
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Automated update of domain and IP lists from URL"
+          push_options: "--force"
