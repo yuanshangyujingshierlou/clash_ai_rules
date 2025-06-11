@@ -6,6 +6,9 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch: # 可选：允许手动触发
 
+permissions:
+  contents: write
+
 jobs:
   generate_rules:
     runs-on: ubuntu-latest
@@ -41,4 +44,3 @@ jobs:
       with:
         commit_message: "Automated update of domain and IP lists from URL"
         push_options: '--force'
-        token: ${{ secrets.GITHUB_TOKEN }} # 显式指定使用 GITHUB_TOKEN
