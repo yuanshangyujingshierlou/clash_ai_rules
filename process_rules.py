@@ -7,7 +7,12 @@ if not raw_data:
     print("RAW_DATA environment variable not set.")
     exit(1)
 
-domains = set()
+# 预定义的必须包含的域名
+predefined_domains = {
+    "api.anthropic.com"
+}
+
+domains = set(predefined_domains)
 ips = set()
 process_names = set()
 
