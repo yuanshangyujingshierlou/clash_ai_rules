@@ -9,7 +9,8 @@ if not raw_data:
 
 # 预定义的必须包含的域名
 predefined_domains = {
-    "api.anthropic.com"
+    "api.anthropic.com",
+    "anthropic.com"
 }
 
 domains = set(predefined_domains)
