@@ -11,7 +11,8 @@ if not raw_data:
 predefined_domains = {
     "anthropic.com",  # 这将作为 DOMAIN-SUFFIX 处理，自动匹配所有子域名
     "chatgpt.com",    # ChatGPT 相关域名
-    "openai.com"      # OpenAI 相关域名
+    "openai.com",     # OpenAI 相关域名
+    "oaistatic.com"   # OpenAI 静态资源域名
 }
 
 domains = set(predefined_domains)
@@ -47,7 +48,9 @@ for line in raw_data.splitlines():
         process_names.add(process_name)
 
 domain_list = sorted(list(domains))
-yaml_data_domains = {"payload": domain_list}
+# 为 behavior: domain 格式添加通配符前缀
+domain_list_with_wildcard = [f"+.{domain}" for domain in domain_list]
+yaml_data_domains = {"payload": domain_list_with_wildcard}
 
 with open("domains.list", "w") as f:
     yaml.dump(yaml_data_domains, f, sort_keys=False)
