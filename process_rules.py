@@ -21,18 +21,26 @@ for line in raw_data.splitlines():
     line = line.strip()
     if not line or line.startswith("#"):
         continue
+    
+    # 处理域名相关规则
     if line.startswith("DOMAIN-KEYWORD,"):
         domains.add(line.split(",")[1].strip())
     elif line.startswith("DOMAIN-SUFFIX,"):
         domains.add(line.split(",")[1].strip())
     elif line.startswith("DOMAIN,"):
         domains.add(line.split(",")[1].strip())
+    
+    # 处理IP相关规则
     elif line.startswith("IP-CIDR,"):
         parts = line.split(",")
         if len(parts) > 1:
-            ips.add(parts[1].strip())
+            ip_cidr = parts[1].strip()
+            ips.add(ip_cidr)
+    
+    # 处理进程名相关规则
     elif line.startswith("PROCESS-NAME,"):
-        process_names.add(line.split(",")[1].strip())
+        process_name = line.split(",")[1].strip()
+        process_names.add(process_name)
 
 domain_list = sorted(list(domains))
 yaml_data_domains = {"payload": domain_list}
