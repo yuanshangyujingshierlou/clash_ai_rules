@@ -9,8 +9,9 @@ if not raw_data:
 
 # 预定义的必须包含的域名
 predefined_domains = {
-    "api.anthropic.com",
-    "anthropic.com"
+    "anthropic.com",  # 这将作为 DOMAIN-SUFFIX 处理，自动匹配所有子域名
+    "chatgpt.com",    # ChatGPT 相关域名
+    "openai.com"      # OpenAI 相关域名
 }
 
 domains = set(predefined_domains)
@@ -24,22 +25,25 @@ for line in raw_data.splitlines():
     
     # 处理域名相关规则
     if line.startswith("DOMAIN-KEYWORD,"):
-        domains.add(line.split(",")[1].strip())
+        domains.add(line.split(",", 1)[1].strip())
     elif line.startswith("DOMAIN-SUFFIX,"):
-        domains.add(line.split(",")[1].strip())
+        domains.add(line.split(",", 1)[1].strip())
     elif line.startswith("DOMAIN,"):
-        domains.add(line.split(",")[1].strip())
+        domains.add(line.split(",", 1)[1].strip())
     
     # 处理IP相关规则
     elif line.startswith("IP-CIDR,"):
-        parts = line.split(",")
+        parts = line.split(",", 1)
         if len(parts) > 1:
             ip_cidr = parts[1].strip()
+            # 移除 no-resolve 后缀
+            if ",no-resolve" in ip_cidr:
+                ip_cidr = ip_cidr.replace(",no-resolve", "")
             ips.add(ip_cidr)
     
     # 处理进程名相关规则
     elif line.startswith("PROCESS-NAME,"):
-        process_name = line.split(",")[1].strip()
+        process_name = line.split(",", 1)[1].strip()
         process_names.add(process_name)
 
 domain_list = sorted(list(domains))
