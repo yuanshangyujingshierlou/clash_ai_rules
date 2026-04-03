@@ -1,5 +1,12 @@
 payload:
-- Claude
-- Claude Helper
-- LM Studio
-- grok
+- PROCESS-NAME,Antigravity Helper
+- PROCESS-NAME,Antigravity Helper (GPU)
+- PROCESS-NAME,Antigravity Helper (Plugin)
+- PROCESS-NAME,Antigravity Helper (Renderer)
+- PROCESS-NAME,Claude
+- PROCESS-NAME,Claude Helper
+- PROCESS-NAME,Code Helper
+- PROCESS-NAME,Code Helper (Plugin)
+- PROCESS-NAME,Google Drive
+- PROCESS-NAME,LM Studio
+- PROCESS-NAME,grok
