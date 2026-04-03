@@ -62,7 +62,8 @@ with open("ips.list", "w") as f:
     yaml.dump(yaml_data_ips, f, sort_keys=False)
 
 process_name_list = sorted(list(process_names))
-yaml_data_process_names = {"payload": process_name_list}
+process_name_list_with_prefix = [f"PROCESS-NAME,{name}" for name in process_name_list]
+yaml_data_process_names = {"payload": process_name_list_with_prefix}
 
 with open("process_names.list", "w") as f:
     yaml.dump(yaml_data_process_names, f, sort_keys=False)
