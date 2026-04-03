@@ -9,4 +9,4 @@ payload:
 - PROCESS-NAME,Code Helper (Plugin)
 - PROCESS-NAME,Google Drive
 - PROCESS-NAME,LM Studio
-- PROCESS-NAME,Grok
+- PROCESS-NAME,grok
